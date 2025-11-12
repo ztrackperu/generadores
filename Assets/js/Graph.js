@@ -187,23 +187,43 @@ async function generarReporte(value){
             const datos = JSON.parse(this.responseText);
             console.log(datos);
             //construccion de tabla
-            
+            let primerFuel = null;
+            let ultimoFuel = null;
+            let primerTimer = null;
+            let ultimoTimer = null;
+                        
             let tablaDeDatos = [
                 [
                 { text: 'Fecha', bold: true, fontSize:7 }, 
-                { text: 'Voltaje de batería', bold: true, fontSize:7 }, 
+                { text: 'Voltaje Generado', bold: true, fontSize:7 }, 
                 { text: 'Temp. motor', bold: true, fontSize:7 }, 
                 { text:'Frecuencia de Arranque', bold: true, fontSize:7 },
                 { text: 'Nivel de combustible', bold: true, fontSize:7 },
                 { text: 'Voltaje entregado', bold: true, fontSize:7 },
-                { text: 'Corriente del rotor', bold: true, fontSize:7 },
+                { text: 'Ecopower', bold: true, fontSize:7 },
                 { text: 'Corriente de campo', bold: true, fontSize:7 },
                 { text: 'Velocidad', bold: true, fontSize:7 },
                 //{ text: 'Eco Power', bold: true, fontSize:7 },
                 { text: 'RPM', bold: true, fontSize:7 },
                 { text: 'Horómetro', bold: true, fontSize:7 }]
             ];
-            datos.forEach(element => {
+            //datos.forEach(element => {
+            datos.forEach((element, index) => {
+                  // Tomar primer valor
+                if (index === 0) {
+                    primerFuel = element.Dv_Fuel;
+                    primerTimer = element.Tr_Timer2;
+                }
+
+                // Tomar último valor
+                if (index === datos.length - 1) {
+                    ultimoFuel = element.Dv_Fuel;
+                    ultimoTimer = element.Tr_Timer2;
+                }
+
+
+
+
                 //element.ecopower = 'ON';
                 tablaDeDatos.push(
                 [   element.fecha_r, 
@@ -212,7 +232,8 @@ async function generarReporte(value){
                     element.Dv_Frequency,
                     element.Dv_Fuel,
                     element.Rt_Voltaje2,
-                    element.Rt_Rotor,
+                    //element.Rt_Rotor,
+                    "ON",
                     element.Rt_Field,
                     element.velocidad,
                     //element.ecopower,
@@ -260,9 +281,9 @@ async function generarReporte(value){
                                                                         table: {
                                                                             widths: ['50%', '50%'],
                                                                             body: [
-                                                                                [{ text: 'Nombre:', style: 'label' }, { text: 'Nombre', bold:true, style: 'input' }],
-                                                                                [{ text: 'Apellido:', style: 'label' }, { text: 'Apellido', bold:true, style: 'input' }],
-                                                                                [{ text: 'Correo:', style: 'label' }, { text: 'Correo', bold:true, style: 'input' }]
+                                                                                [{ text: 'Nombre:', style: 'label' }, { text: ' CITITRANS', bold:true, style: 'input' }],
+                                                                                [{ text: 'Apellido:', style: 'label' }, { text: 'PERÚ', bold:true, style: 'input' }],
+                                                                                [{ text: 'Correo:', style: 'label' }, { text: 'NA', bold:true, style: 'input' }]
                                                                             ]
                                                                         },
                                                                         layout: 'noBorders'
@@ -278,9 +299,9 @@ async function generarReporte(value){
                                                                         table: {
                                                                             widths: ['50%', '50%'],
                                                                             body: [
-                                                                                [{ text: 'RUC:', style: 'label' }, { text: 'RUC', bold:true, style: 'input' }],
-                                                                                [{ text: 'Empresa:', style: 'label' }, { text: 'Empresa', bold:true, style: 'input' }],
-                                                                                [{ text: 'Inicio de Suscripción:', style: 'label' }, { text: 'Inicio Suscrip', bold:true, style: 'input' }]
+                                                                                [{ text: 'RUC:', style: 'label' }, { text: '20609553376', bold:true, style: 'input' }],
+                                                                                [{ text: 'Empresa:', style: 'label' }, { text: 'CITITRANS S.A.C.', bold:true, style: 'input' }],
+                                                                                [{ text: 'Inicio de Suscripción:', style: 'label' }, { text: '01/11/2025', bold:true, style: 'input' }]
                                                                             ]
                                                                         },
                                                                         layout: 'noBorders'
@@ -296,8 +317,8 @@ async function generarReporte(value){
                                                                         table: {
                                                                             widths: ['50%', '50%'],
                                                                             body: [
-                                                                                [{ text: 'Tiempo de Suscripción:', style: 'label' }, { text: 'Tiempo de Suscrip', bold:true, style: 'input' }],
-                                                                                [{ text: 'Estado:', style: 'label' }, { text: 'Estado', bold:true, style: 'input' }]
+                                                                                [{ text: 'Tiempo de Suscripción:', style: 'label' }, { text: '3 MESES', bold:true, style: 'input' }],
+                                                                                [{ text: 'Estado:', style: 'label' }, { text: 'ACTIVO', bold:true, style: 'input' }]
                                                                             ]
                                                                         },
                                                                         layout: 'noBorders'
@@ -348,7 +369,7 @@ async function generarReporte(value){
                                     widths: ['80%'],
                                     body: [
                                         [
-                                            { text: 'NA', bold: true, style: 'input', border: [true, true, true, true] }
+                                            { text: ultimoTimer -primerTimer, bold: true, style: 'input', border: [true, true, true, true] }
                                         ]
                                     ]
                                 },
@@ -396,7 +417,7 @@ async function generarReporte(value){
                                     widths: ['80%'],
                                     body: [
                                         [
-                                            { text: 'NA', bold: true, style: 'input', border: [true, true, true, true] }
+                                            { text: ultimoTimer, bold: true, style: 'input', border: [true, true, true, true] }
                                         ]
                                     ]
                                 },
@@ -437,7 +458,7 @@ async function generarReporte(value){
                                 stack: [
                                     {
                                         text:[
-                                            { text: 'Mensajes:',style: 'label', margin: [0, 5, 0, 10] }
+                                            { text: 'Consumo(L):',style: 'label', margin: [0, 5, 0, 10] }
                                         ],
                                         margin: [0, 10, 0, 0]
                                     }
@@ -449,7 +470,7 @@ async function generarReporte(value){
                                     widths: ['80%'],
                                     body: [
                                         [
-                                            { text: '0', bold: true, style: 'input', border: [true, true, true, true] }
+                                            { text: (primerFuel-ultimoFuel).toFixed(2), bold: true, style: 'input', border: [true, true, true, true] }
                                         ]
                                     ]
                                 },
@@ -461,7 +482,7 @@ async function generarReporte(value){
                                 stack: [
                                     {
                                         text:[
-                                            { text: 'Próximo mantenimiento:',style: 'label', margin: [0, 5, 0, 10] }
+                                            { text: 'Próximo mantenimiento en :',style: 'label', margin: [0, 5, 0, 10] }
                                         ],
                                         margin: [0, 10, 0, 10]
                                     }
@@ -473,7 +494,7 @@ async function generarReporte(value){
                                     widths: ['80%'],
                                     body: [
                                         [
-                                            { text: '500', bold: true, style: 'input', border: [true, true, true, true] }
+                                            { text: String(500-ultimoTimer)+" h" , bold: true, style: 'input', border: [true, true, true, true] }
                                         ]
                                     ]
                                 },

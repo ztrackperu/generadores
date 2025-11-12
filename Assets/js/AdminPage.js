@@ -379,9 +379,9 @@ function dataTableGenset(){
     if (diffMin <= 20) {
       badgeClass = 'bg-success';
       texto = fechaLimpia;
-    } else if (diffMin <= 360) { // 6 horas = 360 minutos
+    } else if (diffMin <= 120) { // 6 horas = 360 minutos
       badgeClass = 'bg-warning text-dark';
-      texto = 'Inactivo (menos de 6h)';
+      texto = 'Espera (menos de 2h)';
     } else {
       badgeClass = 'bg-danger';
       texto = fechaLimpia
@@ -440,8 +440,11 @@ function dataTableGenset(){
             {
                 targets: 6,
                 render: function(data, type, row){
+                    if(data===null || data===undefined || data==0){
+                        data = "NA" ;
+                    }
                     //return `<div class='d-flex justify-content-center' style='display:block;margin:0 auto;'><canvas style='margin:0;' id='gfPastel${data.id}' width='100' height='100'></canvas></div>`;
-                    return `<div class='d-flex justify-content-center'>${data}</div>`;
+                    return `<div class='d-flex justify-content-center'>${data} L</div>`;
                 }
             }
         ],
