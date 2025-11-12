@@ -142,13 +142,21 @@
                 </a>
             </li>
             <!-- USUARIOS -->
+
+            <!--
+
             <li class="sidebar-item">
                 <a href="<?php echo base_url?>Perfil" class="sidebar-link">
                     <i class="ri-user-fill"></i>
                     <span class="text-uppercase">Usuarios</span>
                 </a>
             </li>
+
+
+            -->
             <!-- REPORTES -->
+                         <!--
+
             <li class="sidebar-item">
                 <a href="<?php echo base_url?>Reporte" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#report" aria-expanded="false" aria-controls="report">
                     <i class="ri-file-list-3-fill"></i>
@@ -160,6 +168,8 @@
                     </li>
                 </ul>
             </li>
+
+            !-->
             <!--
             <li class="sidebar-item">
                 <a href="<?php echo base_url?>Control" class="sidebar-link">
