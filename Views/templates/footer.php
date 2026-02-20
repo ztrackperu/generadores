@@ -152,5 +152,8 @@ if (!empty($_GET['url'])) {
 } 
 ?>
 <script src="<?php echo base_url;?>Assets/js/generales.js"></script>
+<!-- jsPDF + autoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </body>
 </html>

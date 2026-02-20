@@ -134,6 +134,15 @@
                     <span class="text-uppercase">Data</span>
                 </a>
             </li>
+            <!-- REPORTES -->
+            <li class="sidebar-item">
+                <a href="<?php echo base_url?>Reportes" class="sidebar-link">
+                    <i class="bi bi-file-earmark-bar-graph"></i>
+                    <span class="text-uppercase">Reportes</span>
+                </a>
+            </li>
+
+
             <!-- Catalogo -->
             <li class="sidebar-item">
                 <a href="<?php echo base_url?>Catalogos" class="sidebar-link">
