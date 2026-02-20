@@ -163,3 +163,13 @@ function dataComando(){
 function myFunction(id) {
     alert('ID: ' + id);
 }
+
+function alertas(msg, icono) {
+    Swal.fire({
+        position: 'center',
+        icon: icono,
+        title: msg,
+        showConfirmButton: false,
+        timer: 3000
+    })
+}

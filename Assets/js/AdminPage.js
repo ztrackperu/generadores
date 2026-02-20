@@ -312,7 +312,7 @@ function dataTableGenset(){
     tblGenset = $('#tblGenset').DataTable({
         //pageLength: 8,
         ajax: {
-            url: base_url + "AdminPage/ListaDeGraficos",
+            url: base_url + "AdminPage/ListaDeGraficos", 
             dataSrc: ''
         },
         columns: [
@@ -322,7 +322,8 @@ function dataTableGenset(){
             { 'data' : 'fecha_r'},
             { 'data': 'Tr_Timer2'},
             { 'data': 'Dv_Alarm'},
-            { 'data': 'Dv_Fuel'}
+            { 'data': 'Dv_Fuel'},
+            { 'data': 'alias'}        // <-- columna nueva
         ],
         columnDefs: [
             {
@@ -446,7 +447,23 @@ function dataTableGenset(){
                     //return `<div class='d-flex justify-content-center' style='display:block;margin:0 auto;'><canvas style='margin:0;' id='gfPastel${data.id}' width='100' height='100'></canvas></div>`;
                     return `<div class='d-flex justify-content-center'>${data} L</div>`;
                 }
-            }
+            },
+            {
+
+                targets: 7,  // índice de la nueva columna
+                render: function(data, type, row) {
+                    let texto = data || 'SIN DESCRIPCION';
+                    return `<div class='alias-cell text-center' 
+                                data-imei='${row.imei}' 
+                                data-alias='${texto}'
+                                onclick='editarAlias(this)' 
+                                style='cursor:pointer;'
+                                title='Click para editar'>
+                                <span class='alias-texto ${texto === "SIN DESCRIPCION" ? "text-muted fst-italic" : ""}'>${texto}</span>
+                                <i class='bi bi-pencil-fill text-muted ms-1' style='font-size:0.7rem;'></i>
+                            </div>`;
+                }
+            },
         ],
         responsive: true,
         drawCallback: function(settings) {
@@ -941,3 +958,72 @@ function detallesContenedor(id){
     }
 }
 */
+
+
+function editarAlias(celda) {
+    if (celda.querySelector('input')) return; // ya está editando
+
+    let imei  = celda.dataset.imei;
+    let alias = celda.dataset.alias === 'SIN DESCRIPCION' ? '' : celda.dataset.alias;
+
+    celda.innerHTML = `
+        <div class='d-flex align-items-center gap-1' onclick='event.stopPropagation()'>
+            <input type='text' 
+                   class='form-control form-control-sm input-alias' 
+                   value='${alias}' 
+                   placeholder='Ej: ASN-20'
+                   maxlength='50'
+                   style='min-width:90px; max-width:150px;'
+                   autofocus>
+            <button class='btn btn-success btn-sm' onclick='guardarAlias("${imei}", this)'>
+                <i class='bi bi-check-lg'></i>
+            </button>
+            <button class='btn btn-secondary btn-sm' onclick='cancelarAlias(this, "${celda.dataset.alias}")'>
+                <i class='bi bi-x-lg'></i>
+            </button>
+        </div>`;
+
+    celda.querySelector('input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter')  guardarAlias(imei, celda.querySelector('.btn-success'));
+        if (e.key === 'Escape') cancelarAlias(celda.querySelector('.btn-secondary'), celda.dataset.alias);
+    });
+}
+
+function guardarAlias(imei, btn) {
+    let celda     = btn.closest('.alias-cell');
+    let input     = celda.querySelector('input');
+    let nuevoAlias = input.value.trim();
+
+    if (nuevoAlias === '') {
+        input.classList.add('is-invalid');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('imei', imei);
+    formData.append('alias', nuevoAlias);
+
+    const http = new XMLHttpRequest();
+    http.open('POST', base_url + 'AdminPage/guardarAlias', true);
+    http.send(formData);
+    http.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const res = JSON.parse(this.responseText);
+            alertas(res.msg, res.icono);
+            if (res.icono === 'success') {
+                celda.dataset.alias = nuevoAlias;
+                celda.innerHTML = `
+                    <span class='alias-texto'>${nuevoAlias}</span>
+                    <i class='bi bi-pencil-fill text-muted ms-1' style='font-size:0.7rem;'></i>`;
+            }
+        }
+    };
+}
+
+function cancelarAlias(btn, aliasOriginal) {
+    let celda  = btn.closest('.alias-cell');
+    let esSin  = aliasOriginal === 'SIN DESCRIPCION';
+    celda.innerHTML = `
+        <span class='alias-texto ${esSin ? "text-muted fst-italic" : ""}'>${aliasOriginal}</span>
+        <i class='bi bi-pencil-fill text-muted ms-1' style='font-size:0.7rem;'></i>`;
+}

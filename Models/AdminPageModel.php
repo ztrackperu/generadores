@@ -5,6 +5,30 @@ class AdminPageModel extends Query{
     {
         parent::__construct();
     }
+
+
+    public function getAlias($imei)
+{
+    $sql = "SELECT alias FROM dispositivos_alias WHERE imei = '$imei'";
+    $res = $this->select($sql);
+    return $res;
+}
+
+public function guardarAlias($imei, $alias)
+{
+    $sql = "INSERT INTO dispositivos_alias (imei, alias) VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE alias = VALUES(alias)";
+    $datos = array($imei, $alias);
+    return $this->save($sql, $datos);
+}
+
+public function getTodosLosAlias()
+{
+    $sql = "SELECT imei, alias FROM dispositivos_alias";
+    return $this->selectAll($sql);
+}
+
+    
     public function selectConfiguracion()
     {
         $sql = "SELECT * FROM configuracion";

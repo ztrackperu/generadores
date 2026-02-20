@@ -33,7 +33,7 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>Fecha</th>
-                                        <th>Voltaje de batería</th>
+                                        <th>Voltaje emitido</th>
                                         <th>Temp. motor</th>
                                         <th>Frecuencia de arranque</th>
                                         <th>Nivel de combustible</th>

@@ -17,6 +17,32 @@ class AdminPage extends Controller
         }
         parent::__construct();
     }
+    public function getAlias($imei)
+{
+    $res = $this->model->getAlias($imei);
+    $alias = $res ? $res['alias'] : '';
+    echo json_encode(['alias' => $alias]);
+    die();
+}
+
+public function guardarAlias()
+{
+    $imei  = strClean($_POST['imei']);
+    $alias = strClean($_POST['alias']);
+    if (empty($imei) || empty($alias)) {
+        echo json_encode(['msg' => 'Datos incompletos', 'icono' => 'warning']);
+        die();
+    }
+    $data = $this->model->guardarAlias($imei, $alias);
+    if ($data == 1) {
+        $msg = ['msg' => 'Descripción guardada', 'icono' => 'success'];
+    } else {
+        $msg = ['msg' => 'Error al guardar', 'icono' => 'error'];
+    }
+    echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+    die();
+}
+
     public function index()
     {
 		$id_user = $_SESSION['id_ztrack'];
@@ -222,7 +248,37 @@ class AdminPage extends Controller
         echo json_encode($cards, JSON_UNESCAPED_UNICODE);
     }
     
-    public function ListaDeGraficos() {
+
+public function ListaDeGraficos() {
+    $data = $this->model->ListaDeDispositivos($_SESSION['empresa_genset_id']);
+    $res = json_decode($data);
+    $res = $res->data;
+    $res = $res->genset;
+
+    // Traer todos los alias guardados en MySQL
+    $aliasDB = $this->model->getTodosLosAlias();
+    // Convertir a array asociativo imei => alias para búsqueda rápida
+    $aliasMap = [];
+    foreach ($aliasDB as $row) {
+        $aliasMap[$row['imei']] = $row['alias'];
+    }
+
+    $i = 1;
+    foreach($res as $val) {
+        $val->id = $i;
+        $horo = $val->Tr_Timer2;
+        if($horo > 2){
+            $val->Tr_Timer2 = ($horo - 1 + 256) / 256;
+        }
+        // Inyectar alias: si existe en MySQL lo usa, sino "SIN DESCRIPCION"
+        $val->alias = isset($aliasMap[$val->imei]) ? $aliasMap[$val->imei] : 'SIN DESCRIPCION';
+        $i++;
+    }
+    echo json_encode($res, JSON_UNESCAPED_UNICODE);
+}
+
+
+    public function ListaDeGraficos_EX() {
         //$empresa_id = 3;
         $data = $this->model->ListaDeDispositivos($_SESSION['empresa_genset_id']);
         $res = json_decode($data);
@@ -234,8 +290,12 @@ class AdminPage extends Controller
         foreach($res as $val) {
             $val->id = $i;
             $horo = $val->Tr_Timer2;
+            $horo1 = $val->Tr_Timer1;
+
             if($horo>2){
                 $val->Tr_Timer2 =($horo-1+256)/256;
+                $val->Tr_Timer1 =($horo1+256)/256;
+
             }
 
 

@@ -331,6 +331,7 @@ function ContenedorMadurador_2($val){
                                     <th>Horómetro</th>
                                     <th>Alertas</th>
                                     <th>Combustible</th>
+                                     <th>Descripción</th>  <!-- nuevo -->
                                 </tr>
                             </thead>
                         </table>
