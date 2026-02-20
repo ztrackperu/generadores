@@ -134,6 +134,13 @@
                     <span class="text-uppercase">Data</span>
                 </a>
             </li>
+            <!-- Catalogo -->
+            <li class="sidebar-item">
+                <a href="<?php echo base_url?>Catalogos" class="sidebar-link">
+                    <i class="bi bi-table"></i>
+                    <span class="text-uppercase">Catálogos</span>
+                </a>
+            </li>
             <!-- MANTENIMIENTO -->
             <li class="sidebar-item">
                 <a href="<?php echo base_url?>Mantenimiento" class="sidebar-link">
